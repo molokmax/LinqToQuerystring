@@ -36,17 +36,17 @@
 
                 concreteCollection = new List<ConcreteClass>
                                          {
-                                             InstanceBuilders.BuildConcrete("Apple", 1, new DateTime(2002, 01, 01), true, 10000000000, 111.111, 111.111f, 0x00, 0.1m, guidArray[0]),
-                                             InstanceBuilders.BuildConcrete("Apple", 2, new DateTime(2005, 01, 01), false, 30000000000, 333.333, 333.333f, 0x22, 0.3m, guidArray[2]),
-                                             InstanceBuilders.BuildConcrete("Custard", 1, new DateTime(2003, 01, 01), true, 50000000000, 555.555, 555.555f, 0xDD, 0.5m, guidArray[4]),
-                                             InstanceBuilders.BuildConcrete("Custard", 2, new DateTime(2002, 01, 01), false, 30000000000, 333.333, 333.333f, 0x00, 0.3m, guidArray[2]),
-                                             InstanceBuilders.BuildConcrete("Custard", 3, new DateTime(2002, 01, 01), true, 40000000000, 444.444, 444.444f, 0x22, 0.4m, guidArray[3]),
-                                             InstanceBuilders.BuildConcrete("Banana", 3, new DateTime(2003, 01, 01), false, 10000000000, 111.111, 111.111f, 0x00, 0.1m, guidArray[0]),
-                                             InstanceBuilders.BuildConcrete("Eggs", 1, new DateTime(2005, 01, 01), true, 40000000000, 444.444, 444.444f, 0xCC, 0.4m, guidArray[3]),
-                                             InstanceBuilders.BuildConcrete("Eggs", 3, new DateTime(2001, 01, 01), false, 20000000000, 222.222, 222.222f, 0xCC, 0.2m, guidArray[1]),
-                                             InstanceBuilders.BuildConcrete("Dogfood", 4, new DateTime(2003, 01, 01), true, 30000000000, 333.333, 333.333f, 0xEE, 0.3m, guidArray[2]),
-                                             InstanceBuilders.BuildConcrete("Dogfood", 4, new DateTime(2004, 01, 01), false, 10000000000, 111.111, 111.111f, 0xDD, 0.1m, guidArray[0]),
-                                             InstanceBuilders.BuildConcrete("Dogfood", 5, new DateTime(2001, 01, 01), true, 20000000000, 222.222, 222.222f, 0xCC, 0.2m, guidArray[1])
+                                             InstanceBuilders.BuildConcrete("Apple", 1, new DateTime(2002, 01, 01), new TimeSpan(12, 45, 0), true, 10000000000, 111.111, 111.111f, 0x00, 0.1m, guidArray[0]),
+                                             InstanceBuilders.BuildConcrete("Apple", 2, new DateTime(2005, 01, 01), new TimeSpan(12, 30, 0), false, 30000000000, 333.333, 333.333f, 0x22, 0.3m, guidArray[2]),
+                                             InstanceBuilders.BuildConcrete("Custard", 1, new DateTime(2003, 01, 01), new TimeSpan(12, 45, 0), true, 50000000000, 555.555, 555.555f, 0xDD, 0.5m, guidArray[4]),
+                                             InstanceBuilders.BuildConcrete("Custard", 2, new DateTime(2002, 01, 01), new TimeSpan(12, 20, 0), false, 30000000000, 333.333, 333.333f, 0x00, 0.3m, guidArray[2]),
+                                             InstanceBuilders.BuildConcrete("Custard", 3, new DateTime(2002, 01, 01), new TimeSpan(13, 45, 0), true, 40000000000, 444.444, 444.444f, 0x22, 0.4m, guidArray[3]),
+                                             InstanceBuilders.BuildConcrete("Banana", 3, new DateTime(2003, 01, 01), new TimeSpan(14, 30, 0), false, 10000000000, 111.111, 111.111f, 0x00, 0.1m, guidArray[0]),
+                                             InstanceBuilders.BuildConcrete("Eggs", 1, new DateTime(2005, 01, 01), new TimeSpan(15, 45, 35), true, 40000000000, 444.444, 444.444f, 0xCC, 0.4m, guidArray[3]),
+                                             InstanceBuilders.BuildConcrete("Eggs", 3, new DateTime(2001, 01, 01), new TimeSpan(1, 0, 0), false, 20000000000, 222.222, 222.222f, 0xCC, 0.2m, guidArray[1]),
+                                             InstanceBuilders.BuildConcrete("Dogfood", 4, new DateTime(2003, 01, 01), new TimeSpan(2, 0, 30), true, 30000000000, 333.333, 333.333f, 0xEE, 0.3m, guidArray[2]),
+                                             InstanceBuilders.BuildConcrete("Dogfood", 4, new DateTime(2004, 01, 01), new TimeSpan(3, 0, 0), false, 10000000000, 111.111, 111.111f, 0xDD, 0.1m, guidArray[0]),
+                                             InstanceBuilders.BuildConcrete("Dogfood", 5, new DateTime(2001, 01, 01), new TimeSpan(0, 0, 0), true, 20000000000, 222.222, 222.222f, 0xCC, 0.2m, guidArray[1])
                                          };
 
                 edgeCaseCollection = new List<ConcreteClass>
@@ -1201,6 +1201,108 @@
     }
 
     #endregion
+
+
+    #region Filter on time tests
+
+    public class When_using_eq_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=Time eq time'12:45'");
+
+        private It should_return_two_records = () => result.Count().ShouldEqual(2);
+
+        private It should_only_return_records_where_time_is_12_45 = () => result.ShouldEachConformTo(o => o.Time == new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_not_eq_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=not Time eq time'12:45'");
+
+        private It should_return_nine_records = () => result.Count().ShouldEqual(9);
+
+        private It should_only_return_records_where_time_is_not_12_45 = () => result.ShouldEachConformTo(o => o.Time != new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_ne_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=Time ne time'12:45'");
+
+        private It should_return_nine_records = () => result.Count().ShouldEqual(9);
+
+        private It should_only_return_records_where_time_is_not_12_45 = () => result.ShouldEachConformTo(o => o.Time != new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_not_ne_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=not Time ne time'12:45'");
+
+        private It should_return_two_records = () => result.Count().ShouldEqual(2);
+
+        private It should_only_return_records_where_time_is_12_45 = () => result.ShouldEachConformTo(o => o.Time == new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_gt_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=Time gt time'12:45'");
+
+        private It should_return_three_records = () => result.Count().ShouldEqual(3);
+
+        private It should_only_return_records_where_time_is_greater_than_12_45 = () => result.ShouldEachConformTo(o => o.Time > new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_not_gt_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=not Time gt time'12:45'");
+
+        private It should_return_two_records = () => result.Count().ShouldEqual(8);
+
+        private It should_only_return_records_where_time_is_not_greater_than_12_45 = () => result.ShouldEachConformTo(o => !(o.Time > new TimeSpan(12, 45, 0)));
+    }
+
+    public class When_using_ge_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=Time ge time'12:45'");
+
+        private It should_return_five_records = () => result.Count().ShouldEqual(5);
+
+        private It should_only_return_records_where_time_is_greater_than_or_equal_to_12_45 = () => result.ShouldEachConformTo(o => o.Time >= new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_not_ge_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=not Time ge time'12:45'");
+
+        private It should_return_six_records = () => result.Count().ShouldEqual(6);
+
+        private It should_only_return_records_where_time_is_not_greater_than_or_equal_to_12_45 = () => result.ShouldEachConformTo(o => !(o.Time >= new TimeSpan(12, 45, 0)));
+    }
+
+    public class When_using_lt_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=Time lt time'12:45'");
+
+        private It should_return_six_records = () => result.Count().ShouldEqual(6);
+
+        private It should_only_return_records_where_time_is_less_than_12_45 = () => result.ShouldEachConformTo(o => o.Time < new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_not_lt_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=not Time lt time'12:45'");
+
+        private It should_return_five_records = () => result.Count().ShouldEqual(5);
+
+        private It should_only_return_records_where_time_is_not_less_than_12_45 = () => result.ShouldEachConformTo(o => !(o.Time < new TimeSpan(12, 45, 0)));
+    }
+
+    public class When_using_le_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=Time le time'12:45'");
+
+        private It should_return_eight_records = () => result.Count().ShouldEqual(8);
+
+        private It should_only_return_records_where_time_is_less_than_or_equal_to_12_45 = () => result.ShouldEachConformTo(o => o.Time <= new TimeSpan(12, 45, 0));
+    }
+
+    public class When_using_not_le_filter_on_a_single_time : Filtering {
+        private Because of = () => result = concreteCollection.AsQueryable().LinqToQuerystring("?$filter=not Time le time'12:45'");
+
+        private It should_return_three_records = () => result.Count().ShouldEqual(3);
+
+        private It should_only_return_records_where_time_is_not_less_than_or_equal_to_12_45 = () => result.ShouldEachConformTo(o => !(o.Time <= new TimeSpan(12, 45, 0)));
+    }
+
+    #endregion
+
 
     #region Filter on bool tests
 

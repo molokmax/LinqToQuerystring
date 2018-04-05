@@ -8,6 +8,7 @@
         public ConcreteClass()
         {
             Date = DateTime.UtcNow;
+            Time = DateTime.UtcNow.TimeOfDay;
         }
 
         public int Id { get; set; }
@@ -15,6 +16,8 @@
         public string Name { get; set; }
 
         public DateTime Date { get; set; }
+
+        public TimeSpan Time { get; set; }
 
         public bool Complete { get; set; }
 

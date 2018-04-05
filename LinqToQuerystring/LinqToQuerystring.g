@@ -105,7 +105,7 @@ orderpropertyname
 			| (SPACE (op=ASC | op=DESC)) -> ^($op propertyname)
 		);
 	
-constant:	(INT^ | BOOL^ | STRING^ | DATETIME^ | LONG^ | SINGLE^ | DECIMAL^ | DOUBLE^ | GUID^ | BYTE^ | NULL^);
+constant:	(INT^ | BOOL^ | STRING^ | DATETIME^ | TIME^ | LONG^ | SINGLE^ | DECIMAL^ | DOUBLE^ | GUID^ | BYTE^ | NULL^);
 
 propertyname[bool subquery]
 	:	(identifierpart[subquery] -> identifierpart) ('/' next=subpropertyname[false] -> ^($propertyname $next))?;
@@ -263,6 +263,9 @@ NULL	:	'null';
 
 DATETIME
 	:	'datetime\'' '0'..'9'+ '-' '0'..'9'+ '-' + '0'..'9'+ 'T' '0'..'9'+ ':' '0'..'9'+ (':' '0'..'9'+ ('.' '0'..'9'+)*)* ('Z')? '\'';
+	
+TIME
+	:	'time\'' '0'..'9'+ ':' '0'..'9'+ (':' + '0'..'9'+)? '\'';
 	
 GUID	:	'guid\'' HEX_PAIR HEX_PAIR HEX_PAIR HEX_PAIR '-' HEX_PAIR HEX_PAIR '-' HEX_PAIR HEX_PAIR '-' HEX_PAIR HEX_PAIR '-' HEX_PAIR HEX_PAIR HEX_PAIR HEX_PAIR HEX_PAIR HEX_PAIR '\'';
 

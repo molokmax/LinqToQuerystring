@@ -63,6 +63,7 @@
     <Compile Include="TreeNodes\Base\TwoChildNode.cs" />
     <Compile Include="TreeNodes\DataTypes\BoolNode.cs" />
     <Compile Include="TreeNodes\DataTypes\ByteNode.cs" />
+    <Compile Include="TreeNodes\DataTypes\TimeNode.cs" />
     <Compile Include="TreeNodes\DataTypes\DecimalNode.cs" />
     <Compile Include="TreeNodes\Functions\DayNode.cs" />
     <Compile Include="TreeNodes\Functions\DaysNode.cs" />
