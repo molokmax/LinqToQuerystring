@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ComplexClass.cs" />
+    <Compile Include="ConcreteTimeClass.cs" />
     <Compile Include="ConcreteClass.cs" />
     <Compile Include="IndexedClass.cs" />
     <Compile Include="InstanceBuilders.cs" />
